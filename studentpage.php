@@ -4,9 +4,10 @@
 <html lang="en">
 <head>
     <?php include 'includes/db.php' ?>
+    <script type="text/javascript" src="grades.js"></script>
 
 
-    <title>Marks Page</title>
+    <title>Student Marks Page</title>
     <style>
          table,td,th{ border: 4px black;
         border-collapse:collapse; 
@@ -36,6 +37,14 @@
         <?php
         //print_r($_SESSION);
     ?>
+                <script>
+                    let errorCode = new URLSearchParams(location.search).get('error');
+                    switch(errorCode){
+                        case 'invalidmarks':
+                            alert("Invalid marks");
+                            break;
+                    }
+                </script>
     <form action="gradecalc.php" method="POST">
     </form>
     <table style="width:80%" id="table">
@@ -48,7 +57,9 @@
             <th>Assignment 1</th>
             <th>Assignment 2</th>
             <th>Midterm</th>
-            <th>Final Exam</th>
+            <th>Final Exam
+            <th>Total</th>
+            <th>Letter Assigned</th></th>
             <th>Status</th>
         </tr>
         <?php
@@ -68,6 +79,9 @@
                echo "<td>$rowMarks[assignment2]</td>"; 
                echo "<td>$rowMarks[midterm]</td>"; 
                echo "<td>$rowMarks[finalexam]</td>"; 
+               $totalMark = $rowMarks['quiz1'] + $rowMarks['quiz2'] + $rowMarks['assignment1'] + $rowMarks['assignment2'] + $rowMarks['midterm'] + $rowMarks['final'];
+               echo "<td>$totalMark</td>";
+               echo "<td><script>document.write(assignLetter($totalMark));</script></td>";
                echo "<td>$rowMarks[status]</td>"; 
 
                echo "</tr>";

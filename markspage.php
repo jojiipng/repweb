@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <?php include 'includes/db.php' ?>
+    <script type="text/javascript" src="grades.js"></script>
 
 
     <title>Marks Page</title>
@@ -65,6 +66,19 @@
         <?php
         //print_r($_SESSION);
     ?>
+    <!-- Mark inpt failue code-->
+                <script>
+                    let errorCode = new URLSearchParams(location.search).get('error');
+                    switch(errorCode){
+                        case 'invalidmarks':
+                            alert("Invalid marks");
+                            break;
+                        case 'invalidpin':
+                            alert('invalid pin, please try again');
+                            break;
+                            
+                    }
+                </script>
 <form action="gradecalc.php" method="POST">
     <table style="width:80%" id="table">
         <caption><h3>Marks Page</h3></caption>
@@ -77,6 +91,8 @@
             <th>Assignment 2</th>
             <th>Midterm</th>
             <th>Final Exam</th>
+            <th>Total</th>
+            <th>Letter Assigned</th>
             <th>Status</th>
             <th>    
         <input type="submit" value="Add student" name="submit"/>
@@ -100,13 +116,15 @@
                echo "<td>$rowMarks[assignment1]</td>"; 
                echo "<td>$rowMarks[assignment2]</td>"; 
                echo "<td>$rowMarks[midterm]</td>"; 
-               echo "<td>$rowMarks[finalexam]</td>"; 
+               echo "<td>$rowMarks[finalexam]</td>";
+               $totalMark = $rowMarks['quiz1'] + $rowMarks['quiz2'] + $rowMarks['assignment1'] + $rowMarks['assignment2'] + $rowMarks['midterm'] + $rowMarks['final'];
+               echo "<td>$totalMark</td>";
+               echo "<td><script>document.write(assignLetter($totalMark));</script></td>";
                echo "<td>$rowMarks[status]</td>"; 
 
                echo "<td><label>Edit:</label><input type=\"submit\" value=\"$rowMarks[grade_id]\" name=\"submit\" id=\"edit\" /></td>";
                echo "</tr>";
-            $rowMarks = mysqli_fetch_assoc($resultMarks);
-
+            $rowMarks = mysqli_fetch_assoc($resultMarks); //go to next row
             }
         ?>
     </table>
